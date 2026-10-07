@@ -68,6 +68,7 @@ h1{ margin:0; font-size:clamp(32px,5vw,56px); line-height:1; font-weight:780; fo
 .sw{ display:inline-block; width:11px; height:14px; border-radius:2px; flex:none; }
 .sw.occ{ background:var(--lit); box-shadow:inset 0 0 0 1px rgba(0,0,0,.14); }
 .sw.vac{ background:var(--glass); }
+.sw.att{ background:var(--glass); box-shadow:inset 0 0 0 1.5px var(--lit); }
 .sw.unk{ background:repeating-linear-gradient(135deg,currentColor 0 1px,transparent 1px 4px); box-shadow:inset 0 0 0 1px currentColor; opacity:.7; }
 
 .facade{ --g:6px; --p:7px; --cols:14; }
@@ -84,6 +85,7 @@ h1{ margin:0; font-size:clamp(32px,5vw,56px); line-height:1; font-weight:780; fo
 .win::before{ content:""; position:absolute; left:3px; right:3px; top:36%; height:1px; background:currentColor; opacity:.2; }
 .win.occ{ background:var(--lit); color:var(--lit-ink); box-shadow:0 0 16px var(--lit-glow); }
 .win.vac{ background:var(--glass); color:var(--glass-ink); }
+.win.att{ background:var(--glass); color:var(--lit); box-shadow:inset 0 0 0 2px var(--lit); }
 .win.unk{ background:repeating-linear-gradient(135deg,var(--hatch) 0 1.5px,transparent 1.5px 6px); color:var(--glass-ink); box-shadow:inset 0 0 0 1px var(--hatch-line); }
 .win:hover{ filter:brightness(1.12); }
 .win[aria-current="true"]{ outline:2px solid #fff; outline-offset:2px; }
@@ -108,7 +110,7 @@ h1{ margin:0; font-size:clamp(32px,5vw,56px); line-height:1; font-weight:780; fo
 .row:hover{ background:var(--soft); }
 .rnum{ font-size:22px; line-height:1.05; font-weight:720; font-stretch:72%; }
 .rmain{ display:flex; flex-direction:column; gap:3px; min-width:0; }
-.rline{ display:flex; gap:10px; align-items:center; font-size:13px; color:var(--muted); }
+.rline{ display:flex; flex-wrap:wrap; gap:2px 10px; align-items:center; font-size:13px; color:var(--muted); }
 .chip{ display:inline-flex; align-items:center; gap:6px; color:var(--ink); }
 .rtxt{ font-size:14px; line-height:1.35; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .more{ color:var(--muted); font-size:13px; }
@@ -123,11 +125,12 @@ h1{ margin:0; font-size:clamp(32px,5vw,56px); line-height:1; font-weight:780; fo
 .det-nav{ display:flex; gap:6px; align-items:center; }
 .icon{ width:36px; height:36px; border-radius:8px; border:1px solid var(--line); background:var(--card); font-size:20px; line-height:1; cursor:pointer; }
 .icon[disabled]{ opacity:.35; cursor:default; }
-.seg{ display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+.seg{ display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
 .seg button{ padding:11px 6px; border:0; border-left:1px solid var(--line); background:transparent; cursor:pointer; font-weight:600; }
 .seg button:first-child{ border-left:0; }
 .seg button[aria-checked="true"].occ{ background:var(--lit); color:var(--lit-ink); }
 .seg button[aria-checked="true"].vac{ background:var(--glass); color:#fff; }
+.seg button[aria-checked="true"].att{ background:var(--glass); color:var(--lit); }
 .seg button[aria-checked="true"].unk{ background:var(--soft); }
 .hint{ margin:10px 0 0; font-size:14px; color:var(--muted); }
 .hint:empty{ display:none; }
@@ -139,7 +142,8 @@ h1{ margin:0; font-size:clamp(32px,5vw,56px); line-height:1; font-weight:780; fo
 .rm{ font-size:13px; color:var(--muted); }
 .rdv-f{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; }
 .rdv-f .btn{ min-height:40px; }
-.rdv-f label,.note{ display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted); }
+.arr{ margin-top:12px; max-width:240px; }
+.rdv-f label,.note,.arr{ display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted); }
 input[type="date"],input[type="time"],textarea{ padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink); font-size:15px; min-height:40px; }
 textarea{ width:100%; resize:vertical; line-height:1.4; }
 .check{ display:flex; align-items:center; gap:10px; margin-top:14px; font-size:15px; cursor:pointer; }
@@ -181,6 +185,9 @@ body.has-bar .toast{ bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
   .win{ font-size:12px; }
   .legend{ padding-left:0; }
   .det-id h2{ font-size:26px; font-stretch:100%; }
+  .seg{ grid-template-columns:repeat(2,1fr); }
+  .seg button:nth-child(odd){ border-left:0; }
+  .seg button:nth-child(n+3){ border-top:1px solid var(--line); }
 }
 @media (prefers-reduced-motion:reduce){ .toast,.win{ transition:none; } }
 </style>
@@ -196,8 +203,8 @@ body.has-bar .toast{ bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
 const HEAD = "<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<meta name=\"robots\" content=\"noindex, nofollow\">\n<title>Occupation des logements, 5 rue du Bessin</title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap\">\n";
 const KEY_P = 'bessin-occ-pending-v1', KEY_UI = 'bessin-occ-ui-v1', KEY_SAVED = 'bessin-occ-saved-v1';
 const NB = '\u00a0';
-const DEF = { o: '', d: '', h: '', x: false, n: '' };
-const OCC = { occ: 'Occupé', vac: 'Vacant', '': 'À confirmer' };
+const DEF = { o: '', a: '', d: '', h: '', x: false, n: '' };
+const OCC = { occ: 'Occupé', att: 'Attribué', vac: 'Vacant', '': 'À confirmer' };
 const STL = { af: 'à faire', tr: 'transmise', le: 'à contrôler', co: 'contestée' };
 
 const $ = (s) => document.querySelector(s);
@@ -224,6 +231,9 @@ const res = (n) => S.res[n] || [];
 const baseVal = (n, f) => { const b = S.L[n]; return (b && b[f] !== undefined) ? b[f] : DEF[f]; };
 function val(n) { const o = {}; for (const f in DEF) o[f] = (P[n] && P[n][f] !== undefined) ? P[n][f] : baseVal(n, f); return o; }
 function rdvState(n) { const v = val(n); if (v.x) return 'done'; if (v.d) return 'set'; if (res(n).length) return 'todo'; return 'none'; }
+// Un logement attribué passe en occupé le jour de l'arrivée de l'occupant, sans saisie.
+const occOf = (v) => (v.o === 'att' && v.a && v.a <= todayISO() ? 'occ' : v.o);
+const hasArr = (v) => !!v.a && (v.o === 'att' || v.o === 'occ');
 
 let P = store.get(KEY_P) || {};
 function cleanPending() {
@@ -268,14 +278,20 @@ function dayLabel(s) {
   return fDay.format(parseISO(s));
 }
 const timeLabel = (h) => { if (!h) return ''; const [H, M] = h.split(':'); return Number(H) + 'h' + M; };
+function arrLabel(s) {
+  if (s === todayISO()) return 'aujourd’hui';
+  const t = new Date(); t.setDate(t.getDate() + 1);
+  return s === iso(t) ? 'demain' : 'le ' + fDM.format(parseISO(s));
+}
+const arrText = (v) => (!hasArr(v) ? '' : v.a > todayISO() ? `arrivée ${arrLabel(v.a)}` : `depuis ${arrLabel(v.a)}`);
 const joinFr = (p) => (p.length <= 1 ? p.join('') : p.slice(0, -1).join(', ') + ' et ' + p[p.length - 1]);
 
 /* ---------- état de l'interface ---------- */
 let ui = Object.assign({ sel: null, brush: 'fiche', y: 0 }, store.get(KEY_UI, true) || {});
 if (ui.sel && !LV[ui.sel]) ui.sel = null;
-if (!['fiche', 'occ', 'vac', 'unk'].includes(ui.brush)) ui.brush = 'fiche';
+if (!['fiche', 'occ', 'att', 'vac', 'unk'].includes(ui.brush)) ui.brush = 'fiche';
 const persistUI = () => store.set(KEY_UI, { sel: ui.sel, brush: ui.brush, y: Math.round(window.scrollY) }, true);
-let ART = null, DL = null, canWrite = null, saving = false, discardArm = false, discardT = null;
+let ART = null, DL = null, canWrite = null, saving = false, discardArm = false, discardT = null, shownDay = '';
 
 /* ---------- squelette ---------- */
 document.getElementById('root').innerHTML = `
@@ -297,6 +313,7 @@ document.getElementById('root').innerHTML = `
       <div class="legend" aria-hidden="true">
         <span><i class="sw occ"></i>Occupé (fenêtre éclairée)</span>
         <span><i class="sw vac"></i>Vacant</span>
+        <span><i class="sw att"></i>Attribué (arrivée prévue)</span>
         <span><i class="sw unk"></i>À confirmer</span>
         <span><i class="bd todo">2</i>Réserves, rendez-vous à prendre</span>
         <span><i class="bd set">1</i>Rendez-vous fixé</span>
@@ -316,24 +333,35 @@ document.getElementById('root').innerHTML = `
 
 /* ---------- rendu ---------- */
 function renderMode() {
-  const opts = [['fiche', 'Ouvrir la fiche'], ['occ', 'Marquer occupé'], ['vac', 'Marquer vacant'], ['unk', 'Marquer à confirmer']];
+  const opts = [['fiche', 'Ouvrir la fiche'], ['occ', 'Marquer occupé'], ['att', 'Marquer attribué'], ['vac', 'Marquer vacant'], ['unk', 'Marquer à confirmer']];
   $('#mode').innerHTML = '<span class="mode-label" id="mode-l">Au clic sur un logement' + NB + ':</span>' +
     opts.map(([k, l]) => `<button type="button" role="radio" aria-checked="${ui.brush === k}" data-brush="${k}" data-k="m${k}">${k !== 'fiche' ? `<span class="sw ${k}" aria-hidden="true"></span>` : ''}${l}</button>`).join('');
   $('#facade').classList.toggle('painting', ui.brush !== 'fiche');
 }
 
 function renderSummary() {
-  let occ = 0, vac = 0;
-  ALL.forEach(({ n }) => { const o = val(n).o; if (o === 'occ') occ++; else if (o === 'vac') vac++; });
-  const unk = ALL.length - occ - vac;
+  let occ = 0, att = 0, vac = 0;
+  const arr = [];
+  ALL.forEach(({ n }) => {
+    const v = val(n), o = occOf(v);
+    if (o === 'occ') occ++; else if (o === 'att') att++; else if (o === 'vac') vac++;
+    if (o === 'att' && v.a) arr.push({ n, a: v.a });
+  });
+  const unk = ALL.length - occ - att - vac;
   let s;
-  if (!occ && !vac) s = `Sur ${ALL.length} logements, aucune occupation n’est encore renseignée.`;
+  if (!occ && !att && !vac) s = `Sur ${ALL.length} logements, aucune occupation n’est encore renseignée.`;
   else {
     const p = [];
     if (occ) p.push(`<b>${occ}</b> ${plural(occ, 'est occupé', 'sont occupés')}`);
+    if (att) p.push(`<b>${att}</b> ${plural(att, 'est attribué', 'sont attribués')}`);
     if (vac) p.push(`<b>${vac}</b> ${plural(vac, 'est vacant', 'sont vacants')}`);
     if (unk) p.push(`<b>${unk}</b> ${plural(unk, 'reste', 'restent')} à confirmer`);
     s = `Sur ${ALL.length} logements, ${joinFr(p)}.`;
+  }
+  if (arr.length) {
+    const first = arr.reduce((m, x) => (x.a < m ? x.a : m), arr[0].a);
+    const ns = arr.filter((x) => x.a === first).map((x) => x.n).sort((a, b) => Number(a) - Number(b));
+    s += ` Prochaine arrivée ${arrLabel(first)}${NB}: ${plural(ns.length, 'logement', 'logements')} ${joinFr(ns)}.`;
   }
   const withRes = ALL.filter(({ n }) => res(n).length);
   if (withRes.length) {
@@ -349,19 +377,20 @@ function renderSummary() {
 }
 
 function tile(n) {
-  const v = val(n), r = res(n), st = rdvState(n);
+  const v = val(n), o = occOf(v), r = res(n), st = rdvState(n);
   let badge = '';
   if (st !== 'none') {
     const t = st === 'done' ? '✓' : (r.length ? String(r.length) : '');
     badge = `<span class="badge ${st}${t ? '' : ' dot'}" aria-hidden="true">${t}</span>`;
   }
-  let label = `Logement ${n}, ${LV[n]}, ${OCC[v.o].toLowerCase()}`;
+  let label = `Logement ${n}, ${LV[n]}, ${OCC[o].toLowerCase()}`;
+  if (hasArr(v)) label += `, ${arrText(v)}`;
   if (r.length) label += `, ${r.length} ${plural(r.length, 'réserve', 'réserves')} en cours`;
   if (st === 'todo') label += ', rendez-vous à prendre';
   else if (st === 'set') label += `, rendez-vous ${dayLabel(v.d).toLowerCase()}${v.h ? ' à ' + timeLabel(v.h) : ''}`;
   else if (st === 'done') label += ', réserves levées';
   if (P[n]) label += ', modification non enregistrée';
-  return `<button type="button" class="win ${v.o || 'unk'}" data-n="${n}" data-k="w${n}"${ui.sel === n ? ' aria-current="true"' : ''}${P[n] ? ' data-dirty=""' : ''} aria-label="${esc(label)}">${n}${badge}</button>`;
+  return `<button type="button" class="win ${o || 'unk'}" data-n="${n}" data-k="w${n}"${ui.sel === n ? ' aria-current="true"' : ''}${P[n] ? ' data-dirty=""' : ''} aria-label="${esc(label)}">${n}${badge}</button>`;
 }
 
 function renderFacade() {
@@ -376,7 +405,7 @@ function renderFacade() {
 }
 
 function renderRdv() {
-  const items = ALL.map(({ n, lv }) => ({ n, lv, v: val(n), r: res(n), st: rdvState(n) }));
+  const items = ALL.map(({ n, lv }) => { const v = val(n); return { n, lv, v, o: occOf(v), r: res(n), st: rdvState(n) }; });
   const todo = items.filter((i) => i.st === 'todo');
   const set = items.filter((i) => i.st === 'set').sort((a, b) => (a.v.d + (a.v.h || '99')).localeCompare(b.v.d + (b.v.h || '99')));
   const done = items.filter((i) => i.st === 'done');
@@ -385,7 +414,7 @@ function renderRdv() {
     const late = i.st === 'set' && i.v.d < today;
     const txt = i.r.length ? esc(i.r[0].t) + (i.r.length > 1 ? ` <span class="more">+${i.r.length - 1}</span>` : '') : '<span class="more">Sans réserve en cours</span>';
     const when = i.st === 'set' ? `<span class="rwhen${late ? ' late' : ''}">${esc(dayLabel(i.v.d))}${i.v.h ? '<br>' + timeLabel(i.v.h) : ''}${late ? '<br><em>passé</em>' : ''}</span>` : '<span class="rwhen"></span>';
-    return `<button type="button" class="row" data-act="open" data-n="${i.n}" data-k="r${i.n}"><span class="rnum">${i.n}</span><span class="rmain"><span class="rline"><span class="chip"><i class="sw ${i.v.o || 'unk'}" aria-hidden="true"></i>${OCC[i.v.o]}</span><span>${esc(i.lv)}</span></span><span class="rtxt">${txt}</span></span>${when}</button>`;
+    return `<button type="button" class="row" data-act="open" data-n="${i.n}" data-k="r${i.n}"><span class="rnum">${i.n}</span><span class="rmain"><span class="rline"><span class="chip"><i class="sw ${i.o || 'unk'}" aria-hidden="true"></i>${OCC[i.o]}</span><span>${esc(i.lv)}</span>${i.o === 'att' && i.v.a ? `<span>${arrText(i.v)}</span>` : ''}</span><span class="rtxt">${txt}</span></span>${when}</button>`;
   };
   let h = '<h2 class="ptitle">Rendez-vous de levée des réserves</h2>';
   if (!todo.length && !set.length && !done.length) h += '<p class="muted">Aucun logement n’a de réserve en cours.</p>';
@@ -398,20 +427,25 @@ function renderRdv() {
 }
 
 function hintText(n) {
-  const v = val(n), r = res(n), st = rdvState(n);
-  if (st === 'done') return '';
-  if (st === 'set') return v.d < todayISO() ? `Date de rendez-vous passée${NB}: cochez «${NB}Réserves levées${NB}» ou fixez une nouvelle date.` : '';
-  if (!r.length) return '';
-  if (v.o === 'occ') return 'Rendez-vous à prendre avec l’occupant.';
-  if (v.o === 'vac') return `Logement vacant${NB}: passage à organiser avec le gestionnaire.`;
-  return 'Occupation à confirmer avec le gestionnaire avant de fixer le rendez-vous.';
+  const v = val(n), o = occOf(v), st = rdvState(n), h = [];
+  if (v.o === 'att' && !v.a) h.push(`Indiquez la date d’arrivée${NB}: le logement passera en occupé ce jour-là.`);
+  else if (v.o === 'att' && o === 'occ') h.push(`Passé en occupé à l’arrivée de l’occupant, ${arrLabel(v.a)}.`);
+  else if (o === 'att') h.push(`Passera en occupé ${arrLabel(v.a)}, à l’arrivée de l’occupant.`);
+  if (st === 'set' && v.d < todayISO()) h.push(`Date de rendez-vous passée${NB}: cochez «${NB}Réserves levées${NB}» ou fixez une nouvelle date.`);
+  else if (st === 'todo') {
+    if (o === 'occ') h.push('Rendez-vous à prendre avec l’occupant.');
+    else if (o === 'att') h.push('Rendez-vous à prendre avant l’arrivée de l’occupant.');
+    else if (o === 'vac') h.push(`Logement vacant${NB}: passage à organiser avec le gestionnaire.`);
+    else h.push('Occupation à confirmer avec le gestionnaire avant de fixer le rendez-vous.');
+  }
+  return h.join(' ');
 }
 
 function renderDetail() {
   const box = $('#detail'), bd = $('#backdrop');
   $('#panel').classList.toggle('has-detail', !!ui.sel);
   if (!ui.sel) { box.hidden = true; bd.hidden = true; box.innerHTML = ''; return; }
-  const n = ui.sel, v = val(n), r = res(n);
+  const n = ui.sel, v = val(n), o = occOf(v), r = res(n);
   const i = ORDER.indexOf(n), prev = ORDER[i - 1], next = ORDER[i + 1];
   box.hidden = false; bd.hidden = false;
   box.innerHTML = `
@@ -424,8 +458,9 @@ function renderDetail() {
       </div>
     </div>
     <div class="seg" role="radiogroup" aria-label="Occupation">
-      ${['occ', 'vac', ''].map((o) => `<button type="button" role="radio" class="${o || 'unk'}" aria-checked="${v.o === o}" data-act="occ" data-o="${o}" data-k="o${o || 'unk'}">${OCC[o]}</button>`).join('')}
+      ${['occ', 'att', 'vac', ''].map((k) => `<button type="button" role="radio" class="${k || 'unk'}" aria-checked="${o === k}" data-act="occ" data-o="${k}" data-k="o${k || 'unk'}">${OCC[k]}</button>`).join('')}
     </div>
+    ${v.o === 'att' || v.o === 'occ' ? `<label class="arr">Date d’arrivée de l’occupant<input type="date" id="f-arr" data-k="farr" value="${esc(v.a)}"></label>` : ''}
     <p class="hint" id="det-hint">${esc(hintText(n))}</p>
     <section class="det-sec">
       <h3>Réserves en cours</h3>
@@ -477,8 +512,16 @@ function renderFoot() {
 function render(opts) {
   opts = opts || {};
   const a = document.activeElement, k = a && a.dataset ? a.dataset.k : null;
+  shownDay = todayISO();
   renderSummary(); renderFacade(); renderRdv();
-  if (opts.detail === false) { const h = $('#det-hint'); if (h && ui.sel) h.textContent = hintText(ui.sel); }
+  if (opts.detail === false) {
+    const h = $('#det-hint');
+    if (h && ui.sel) {
+      h.textContent = hintText(ui.sel);
+      const o = occOf(val(ui.sel));
+      document.querySelectorAll('#detail .seg button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.o === o)));
+    }
+  }
   else renderDetail();
   renderBar(); renderRO(); renderFoot();
   if (k) { const el = document.querySelector('[data-k="' + k + '"]'); if (el && el !== document.activeElement) el.focus({ preventScroll: true }); }
@@ -533,10 +576,10 @@ async function save() {
 }
 
 function csv() {
-  const rows = [['Logement', 'Étage', 'Occupation', 'Réserves en cours', 'Détail des réserves', 'Rendez-vous', 'Heure', 'Réserves levées', 'Note']];
+  const rows = [['Logement', 'Étage', 'Occupation', 'Date d’arrivée', 'Réserves en cours', 'Détail des réserves', 'Rendez-vous', 'Heure', 'Réserves levées', 'Note']];
   ORDER.forEach((n) => {
     const v = val(n), r = res(n);
-    rows.push([n, LV[n], OCC[v.o], r.length, r.map((x) => `n° ${x.id} ${x.t}`).join(' | '), v.d ? parseISO(v.d).toLocaleDateString('fr-FR') : '', v.h ? timeLabel(v.h) : '', v.x ? 'Oui' : (r.length ? 'Non' : ''), v.n]);
+    rows.push([n, LV[n], OCC[occOf(v)], hasArr(v) ? parseISO(v.a).toLocaleDateString('fr-FR') : '', r.length, r.map((x) => `n° ${x.id} ${x.t}`).join(' | '), v.d ? parseISO(v.d).toLocaleDateString('fr-FR') : '', v.h ? timeLabel(v.h) : '', v.x ? 'Oui' : (r.length ? 'Non' : ''), v.n]);
   });
   return '\uFEFF' + rows.map((r) => r.map((c) => { c = String(c == null ? '' : c); return /[;"\n\r]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(';')).join('\r\n');
 }
@@ -580,16 +623,19 @@ async function importFile(file) {
   const norm = (x) => String(x || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const head = (rows.shift() || []).map(norm);
   const col = (name) => head.findIndex((h) => h.startsWith(name));
-  const iN = col('logement'), iO = col('occupation'), iD = col('rendez-vous'), iH = col('heure'), iX = col('reserves levees'), iT = col('note');
+  const iN = col('logement'), iO = col('occupation'), iA = head.findIndex((h) => h.includes('arrivee')), iD = col('rendez-vous'), iH = col('heure'), iX = col('reserves levees'), iT = col('note');
+  const frDate = (x) => { const m = String(x || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); return m ? m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0') : ''; };
   if (iN < 0) { toast('Colonne «' + NB + 'Logement' + NB + '» introuvable dans le fichier.'); return; }
   const touched = new Set();
   rows.forEach((r) => {
     const n = String(r[iN] || '').trim(); if (!LV[n]) return;
     const upd = {};
     const o = norm(r[iO]);
-    if (o.startsWith('occup')) upd.o = 'occ'; else if (o.startsWith('vacant')) upd.o = 'vac';
-    const d = String(r[iD] || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (d) upd.d = d[3] + '-' + d[2].padStart(2, '0') + '-' + d[1].padStart(2, '0');
+    if (o.startsWith('occup')) upd.o = 'occ'; else if (o.startsWith('attribu')) upd.o = 'att'; else if (o.startsWith('vacant')) upd.o = 'vac';
+    const a = frDate(r[iA]);
+    if (a) upd.a = a;
+    const d = frDate(r[iD]);
+    if (d) upd.d = d;
     const h = String(r[iH] || '').trim().match(/^(\d{1,2})\s*[h:]\s*(\d{2})?$/i);
     if (h) upd.h = h[1].padStart(2, '0') + ':' + (h[2] || '00');
     if (norm(r[iX]) === 'oui') upd.x = true;
@@ -606,13 +652,15 @@ let toastT;
 function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 4500); }
 
 /* ---------- événements ---------- */
+// Ne touche pas à un logement déjà affiché dans cet état (ex. attribué passé en occupé à sa date).
+function setOcc(n, o) { if (occOf(val(n)) !== o) setField(n, 'o', o); }
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-brush],[data-act],.win');
   if (!t) return;
   if (t.classList.contains('win')) {
     const n = t.dataset.n;
     if (ui.brush === 'fiche') openDetail(n);
-    else setField(n, 'o', ui.brush === 'unk' ? '' : ui.brush);
+    else setOcc(n, ui.brush === 'unk' ? '' : ui.brush);
     return;
   }
   if (t.dataset.brush) { ui.brush = t.dataset.brush; persistUI(); renderMode(); return; }
@@ -620,7 +668,7 @@ document.addEventListener('click', (e) => {
   if (a === 'open') openDetail(t.dataset.n);
   else if (a === 'go') { if (t.dataset.to) openDetail(t.dataset.to); }
   else if (a === 'close') closeDetail();
-  else if (a === 'occ') { if (ui.sel) setField(ui.sel, 'o', t.dataset.o || ''); }
+  else if (a === 'occ') { if (ui.sel) setOcc(ui.sel, t.dataset.o || ''); }
   else if (a === 'clear') { if (ui.sel) setFields(ui.sel, { d: '', h: '' }); }
   else if (a === 'save') save();
   else if (a === 'discard') discard();
@@ -630,7 +678,8 @@ document.addEventListener('click', (e) => {
 document.addEventListener('change', (e) => { if (e.target.id === 'impfile' && e.target.files && e.target.files[0]) { importFile(e.target.files[0]); e.target.value = ''; } });
 document.addEventListener('change', (e) => {
   const t = e.target; if (!ui.sel) return;
-  if (t.id === 'f-date') setField(ui.sel, 'd', t.value || '', { detail: false });
+  if (t.id === 'f-arr') setField(ui.sel, 'a', t.value || '', { detail: false });
+  else if (t.id === 'f-date') setField(ui.sel, 'd', t.value || '', { detail: false });
   else if (t.id === 'f-time') setField(ui.sel, 'h', t.value || '', { detail: false });
   else if (t.id === 'f-done') setField(ui.sel, 'x', !!t.checked, { detail: false });
 });
@@ -642,6 +691,13 @@ document.addEventListener('keydown', (e) => {
 });
 let scrollT;
 window.addEventListener('scroll', () => { clearTimeout(scrollT); scrollT = setTimeout(persistUI, 250); }, { passive: true });
+// Page restée ouverte : on redessine au changement de jour pour faire passer les arrivées en occupé.
+const newDay = () => { if (todayISO() !== shownDay) render({ detail: false }); };
+(function atMidnight() {
+  const t = new Date(), m = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1, 0, 0, 5);
+  setTimeout(() => { newDay(); atMidnight(); }, m - t);
+})();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) newDay(); });
 
 /* ---------- démarrage ---------- */
 cleanPending();
