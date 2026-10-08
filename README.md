@@ -9,6 +9,7 @@ Adresse : https://lamaximaj.github.io/logements-bessin/
 - Occupation : occupé, attribué, vacant ou à confirmer. Un logement attribué porte la date d'arrivée de l'occupant et s'affiche occupé à partir de ce jour-là, sans nouvelle saisie.
 - Les données publiées sont celles écrites dans `index.html` (bloc `<script id="state">`).
 - Sur ce site, la page est en consultation : les saisies de chacun restent dans son navigateur et se transmettent avec « Télécharger le tableau » (fichier CSV).
+- La version partagée, où les saisies s'enregistrent pour tout le monde, est la page claude.ai « Occupation des logements, 5 rue du Bessin » : les personnes invitées avec le droit de modifier y enregistrent leurs saisies. Le code est le même ; sur claude.ai la page est publiée sans l'enveloppe `<!doctype html>…<body>`, que claude.ai ajoute lui-même.
 - Le site est public ; la balise `noindex` évite seulement son référencement par les moteurs de recherche.
 
 ## Mettre à jour

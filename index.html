@@ -200,7 +200,10 @@ body.has-bar .toast{ bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
 <script id="app">
 (() => {
 'use strict';
-const HEAD = "<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<meta name=\"robots\" content=\"noindex, nofollow\">\n<title>Occupation des logements, 5 rue du Bessin</title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap\">\n";
+// Enveloppe posée par claude.ai à la publication : l'enregistrement la reproduit à l'identique.
+const SKEL = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>\n';
+const TOP = '<title>Occupation des logements, 5 rue du Bessin</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">\n';
+document.documentElement.lang = 'fr';
 const KEY_P = 'bessin-occ-pending-v1', KEY_UI = 'bessin-occ-ui-v1', KEY_SAVED = 'bessin-occ-saved-v1';
 const NB = '\u00a0';
 const DEF = { o: '', a: '', d: '', h: '', x: false, n: '' };
@@ -547,7 +550,7 @@ function pageHTML(st) {
   const css = document.getElementById('css').textContent;
   const app = document.getElementById('app').textContent;
   const json = JSON.stringify(st).replace(/</g, '\\u003c');
-  return '<!doctype html>\n<html lang="fr">\n<head>\n' + HEAD + '<style id="css">' + css + '</style>\n</head>\n<body>\n<div id="root"></div>\n<script type="application/json" id="state">\n' + json + '\n</scr' + 'ipt>\n<script id="app">' + app + '</scr' + 'ipt>\n</body>\n</html>\n';
+  return SKEL + TOP + '<style id="css">' + css + '</style>\n<div id="root"></div>\n<script type="application/json" id="state">\n' + json + '\n</scr' + 'ipt>\n<script id="app">' + app + '</scr' + 'ipt>\n\n</body></html>';
 }
 
 async function save() {
